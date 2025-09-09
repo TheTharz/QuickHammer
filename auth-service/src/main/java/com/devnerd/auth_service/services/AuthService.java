@@ -6,6 +6,7 @@ import com.devnerd.auth_service.clients.UserClient;
 import com.devnerd.auth_service.dto.RegisterRequestDTO;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
+import com.devnerd.auth_service.exception.WeakPasswordException;
 import com.devnerd.auth_service.utils.PasswordUtils;
 
 @Service
@@ -17,6 +18,11 @@ public class AuthService {
   }
   public String registerUser(RegisterRequestDTO registerRequestDTO) {
 
+    //validate the password
+    if(!PasswordUtils.isStrongPassword(registerRequestDTO.getPassword())){
+      throw new WeakPasswordException("Password does not meet the required criteria");
+    }
+
     //hash the password
     String hasedPassword = PasswordUtils.hashPassword(registerRequestDTO.getPassword());
 
@@ -26,10 +32,11 @@ public class AuthService {
       registerRequestDTO.getFullName(),
       registerRequestDTO.getPhoneNumber()
     );
-    
 
     //call the user service to create the actual user
     UserReponseDTO userResponse = userClient.registerUser(requestToUser);
+
+    //save the user in the database
     
     return "register";
   }
