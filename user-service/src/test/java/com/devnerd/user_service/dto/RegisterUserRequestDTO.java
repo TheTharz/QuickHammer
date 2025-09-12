@@ -1,10 +1,12 @@
-package com.devnerd.auth_service.dto;
+package com.devnerd.user_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RegisterUserRequestDTO {
   private String username;
   private String email;

@@ -20,7 +20,7 @@ public class AuthService {
     this.userClient = userClient;
     this.authUserRepository = authUserRepository;
   }
-  
+
   public String registerUser(RegisterRequestDTO registerRequestDTO) {
 
     //validate the password
@@ -34,7 +34,8 @@ public class AuthService {
     RegisterUserRequestDTO requestToUser = new RegisterUserRequestDTO(
       registerRequestDTO.getUsername(),
       registerRequestDTO.getEmail(),
-      registerRequestDTO.getFullName(),
+      registerRequestDTO.getFirstName(),
+      registerRequestDTO.getLastName(),
       registerRequestDTO.getPhoneNumber()
     );
 
