@@ -1,6 +1,5 @@
 package com.devnerd.user_service.controllers;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,8 @@ public class UserController {
   }
 
   @PostMapping("/create-user")
-  public ResponseEntity<RegisterUserResponseDTO> createUser(@RequestBody RegisterUserRequestDTO registerUserRequestDTO) {
+  public RegisterUserResponseDTO createUser(@RequestBody RegisterUserRequestDTO registerUserRequestDTO) {
     RegisterUserResponseDTO response = userService.createUser(registerUserRequestDTO);
-    return ResponseEntity.ok(response);
+    return response;
   }
 }
