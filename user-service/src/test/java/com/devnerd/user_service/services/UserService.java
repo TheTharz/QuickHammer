@@ -1,8 +1,7 @@
 package com.devnerd.user_service.services;
 
-import org.springframework.http.HttpStatus;
-
 import com.devnerd.user_service.dto.RegisterUserRequestDTO;
+import com.devnerd.user_service.dto.RegisterUserResponseDTO;
 import com.devnerd.user_service.exception.DuplicateResourceException;
 import com.devnerd.user_service.models.UserModel;
 import com.devnerd.user_service.repositories.UserRepository;
@@ -15,7 +14,7 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public void createUser(RegisterUserRequestDTO registerUserRequestDTO) {
+  public RegisterUserResponseDTO createUser(RegisterUserRequestDTO registerUserRequestDTO) {
     // Check for duplicate email or username
     if (userRepository.existsByEmail(registerUserRequestDTO.getEmail())) {
         throw new DuplicateResourceException("Email already exists");
@@ -33,8 +32,14 @@ public class UserService {
             .lastName(registerUserRequestDTO.getLastName())
             .build();
 
-    userRepository.save(user);
+    UserModel savedUser = userRepository.save(user);
 
+    //map to dto
+    RegisterUserResponseDTO registerUserResponseDTO = RegisterUserResponseDTO.builder()
+            .userId(savedUser.getId().toString())
+            .build();
+
+    return registerUserResponseDTO;
   }
   
 }
