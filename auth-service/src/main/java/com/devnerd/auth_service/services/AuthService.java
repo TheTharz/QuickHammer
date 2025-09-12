@@ -7,15 +7,20 @@ import com.devnerd.auth_service.dto.RegisterRequestDTO;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 import com.devnerd.auth_service.exception.WeakPasswordException;
+import com.devnerd.auth_service.model.AuthUser;
+import com.devnerd.auth_service.repositories.AuthUserRepository;
 import com.devnerd.auth_service.utils.PasswordUtils;
 
 @Service
 public class AuthService {
   private final UserClient userClient;
+  private final AuthUserRepository authUserRepository;
 
-  public AuthService(UserClient userClient) {
+  public AuthService(UserClient userClient, AuthUserRepository authUserRepository) {
     this.userClient = userClient;
+    this.authUserRepository = authUserRepository;
   }
+  
   public String registerUser(RegisterRequestDTO registerRequestDTO) {
 
     //validate the password
@@ -37,7 +42,14 @@ public class AuthService {
     UserReponseDTO userResponse = userClient.registerUser(requestToUser);
 
     //save the user in the database
+    AuthUser authUser = new AuthUser(
+      Long.parseLong(userResponse.getUserId()),
+      hasedPassword,
+      "user"
+    );
     
+    authUserRepository.save(authUser);
+
     return "register";
   }
 }
