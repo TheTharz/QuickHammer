@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 
-@FeignClient(name = "user-service", url = "http://localhost:8081/api/v1/users")
+@FeignClient(name = "user-service")
 public interface UserClient {
-  @PostMapping("/create-user")
+  @PostMapping("/api/v1/users/create-user")
   UserReponseDTO registerUser(@RequestBody RegisterUserRequestDTO request);
 }

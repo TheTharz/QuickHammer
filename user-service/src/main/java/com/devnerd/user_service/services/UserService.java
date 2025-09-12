@@ -1,11 +1,14 @@
 package com.devnerd.user_service.services;
 
+import org.springframework.stereotype.Service;
+
 import com.devnerd.user_service.dto.RegisterUserRequestDTO;
 import com.devnerd.user_service.dto.RegisterUserResponseDTO;
 import com.devnerd.user_service.exception.DuplicateResourceException;
 import com.devnerd.user_service.models.UserModel;
 import com.devnerd.user_service.repositories.UserRepository;
 
+@Service
 public class UserService {
 
   private final UserRepository userRepository;

@@ -1,0 +1,28 @@
+services:
+  auth-service-db:
+    image: postgres:15
+    container_name: auth-service-db
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - '5432:5432'
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+  user-service-db:
+    image: postgres:15
+    container_name: user-service-db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - '5433:5432'
+    volumes:
+      - user_data:/var/lib/postgresql/data
+
+volumes:
+  auth_data:
+  user_data:
