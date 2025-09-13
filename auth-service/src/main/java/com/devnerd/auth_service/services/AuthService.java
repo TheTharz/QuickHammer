@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.devnerd.auth_service.clients.UserClient;
 import com.devnerd.auth_service.dto.RegisterRequestDTO;
+import com.devnerd.auth_service.dto.RegisterResponseDTO;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 import com.devnerd.auth_service.exception.WeakPasswordException;
@@ -21,7 +22,7 @@ public class AuthService {
     this.authUserRepository = authUserRepository;
   }
 
-  public String registerUser(RegisterRequestDTO registerRequestDTO) {
+  public RegisterResponseDTO registerUser(RegisterRequestDTO registerRequestDTO) {
 
     //validate the password
     if(!PasswordUtils.isStrongPassword(registerRequestDTO.getPassword())){
@@ -49,8 +50,12 @@ public class AuthService {
       "user"
     );
     
-    authUserRepository.save(authUser);
+    AuthUser savedUser = authUserRepository.save(authUser);
 
-    return "register";
+    RegisterResponseDTO registerResponseDTO = new RegisterResponseDTO(
+      savedUser.getUserId().toString()
+    );
+
+    return registerResponseDTO;
   }
 }

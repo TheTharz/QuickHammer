@@ -1,11 +1,13 @@
 package com.devnerd.auth_service.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devnerd.auth_service.dto.RegisterRequestDTO;
+import com.devnerd.auth_service.dto.RegisterResponseDTO;
 import com.devnerd.auth_service.services.AuthService;
 
 @RestController
@@ -19,8 +21,8 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public String register(@RequestBody RegisterRequestDTO request) {
-    authService.registerUser(request);
-    return "register";
+  public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
+    RegisterResponseDTO registerResponseDTO = authService.registerUser(request);
+    return ResponseEntity.ok(registerResponseDTO);
   }
 }
