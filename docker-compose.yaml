@@ -23,6 +23,16 @@ services:
     volumes:
       - user_data:/var/lib/postgresql/data
 
+  session-store:
+    image: redis:7
+    container_name: session-store
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: ['redis-server', '--appendonly', 'yes']
+
 volumes:
   auth_data:
   user_data:
+  redis_data:
