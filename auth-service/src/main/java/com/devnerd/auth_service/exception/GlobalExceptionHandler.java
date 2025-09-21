@@ -41,4 +41,10 @@ public class GlobalExceptionHandler {
           return ResponseEntity.status(status).body(error);
       }
   }
+
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+    ErrorResponse error = new ErrorResponse(ex.getMessage(), 401, System.currentTimeMillis());
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
 }

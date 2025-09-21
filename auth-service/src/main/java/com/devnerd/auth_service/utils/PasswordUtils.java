@@ -16,4 +16,8 @@ public class PasswordUtils {
         String regex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         return password.matches(regex);
   }
+
+  public static boolean verifyPassword(String password, String passwordHash) {
+    return encoder.matches(password, passwordHash);
+  }
 }

@@ -8,4 +8,6 @@ import com.devnerd.auth_service.model.AuthUser;
 
 public interface AuthUserRepository extends JpaRepository<AuthUser, Long> {
   Optional<AuthUser> findByUserId(Long userId);
+
+  Optional<AuthUser> findByEmail(String email);
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devnerd.auth_service.dto.AuthenticationRequestDTO;
+import com.devnerd.auth_service.dto.AuthenticationResponseDTO;
 import com.devnerd.auth_service.dto.RegisterRequestDTO;
 import com.devnerd.auth_service.dto.RegisterResponseDTO;
 import com.devnerd.auth_service.services.AuthService;
@@ -24,5 +26,11 @@ public class AuthController {
   public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO request) {
     RegisterResponseDTO registerResponseDTO = authService.registerUser(request);
     return ResponseEntity.ok(registerResponseDTO);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody AuthenticationRequestDTO request) {
+    AuthenticationResponseDTO authenticationResponseDTO = authService.authenticateUser(request);
+    return ResponseEntity.ok(authenticationResponseDTO);
   }
 }
