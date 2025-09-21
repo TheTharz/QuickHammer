@@ -47,7 +47,8 @@ public class AuthService {
     AuthUser authUser = new AuthUser(
       Long.parseLong(userResponse.getUserId()),
       hasedPassword,
-      "user"
+      "user",
+      registerRequestDTO.getEmail()
     );
     
     AuthUser savedUser = authUserRepository.save(authUser);
