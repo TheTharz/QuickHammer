@@ -85,6 +85,8 @@ public class AuthService {
       jwtToken
     );
 
+    //emit an event to enrich the session store
+
     return response;
   }
 }
