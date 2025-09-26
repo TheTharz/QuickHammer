@@ -6,7 +6,7 @@ import com.devnerd.user_service.dto.RegisterUserRequestDTO;
 import com.devnerd.user_service.dto.RegisterUserResponseDTO;
 import com.devnerd.user_service.exception.DuplicateResourceException;
 import com.devnerd.user_service.models.UserModel;
-import com.devnerd.user_service.repositories.UserRepository;
+import com.devnerd.user_service.repositories.jpa.UserRepository;
 
 @Service
 public class UserService {

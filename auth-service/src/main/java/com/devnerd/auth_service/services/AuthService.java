@@ -14,7 +14,7 @@ import com.devnerd.auth_service.events.producers.EventProducer;
 import com.devnerd.auth_service.exception.AuthenticationException;
 import com.devnerd.auth_service.exception.WeakPasswordException;
 import com.devnerd.auth_service.model.AuthUser;
-import com.devnerd.auth_service.repositories.AuthUserRepository;
+import com.devnerd.auth_service.repositories.jpa.AuthUserRepository;
 import com.devnerd.auth_service.utils.PasswordUtils;
 import com.devnerd.auth_service.utils.TokenUtils;
 

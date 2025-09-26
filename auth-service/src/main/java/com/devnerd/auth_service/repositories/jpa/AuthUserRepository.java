@@ -1,4 +1,4 @@
-package com.devnerd.auth_service.repositories;
+package com.devnerd.auth_service.repositories.jpa;
 
 import java.util.Optional;
 

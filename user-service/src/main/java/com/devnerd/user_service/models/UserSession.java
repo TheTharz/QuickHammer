@@ -2,9 +2,9 @@ package com.devnerd.user_service.models;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 @RedisHash("UserSession")
 public class UserSession implements Serializable{
   @Id
-  private Long userId;
   private String sessionId;
+  private Long userId;
   private String phoneNumber;
   private String firstName;
   private String lastName;

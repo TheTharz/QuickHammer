@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import com.devnerd.user_service.events.models.UserLoginEvent;
 import com.devnerd.user_service.models.UserModel;
 import com.devnerd.user_service.models.UserSession;
-import com.devnerd.user_service.repositories.UserRepository;
-import com.devnerd.user_service.repositories.UserSessionRepository;
+import com.devnerd.user_service.repositories.jpa.UserRepository;
+import com.devnerd.user_service.repositories.redis.UserSessionRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

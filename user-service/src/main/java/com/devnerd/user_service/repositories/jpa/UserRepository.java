@@ -1,4 +1,4 @@
-package com.devnerd.user_service.repositories;
+package com.devnerd.user_service.repositories.jpa;
 
 import java.util.Optional;
 

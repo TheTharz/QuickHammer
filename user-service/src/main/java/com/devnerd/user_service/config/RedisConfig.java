@@ -10,7 +10,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@EnableRedisRepositories
+@EnableRedisRepositories(basePackages = "com.devnerd.user_service.repositories.redis")
 @Configuration
 public class RedisConfig 
 {
