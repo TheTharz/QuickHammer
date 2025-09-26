@@ -9,6 +9,8 @@ import com.devnerd.auth_service.dto.RegisterRequestDTO;
 import com.devnerd.auth_service.dto.RegisterResponseDTO;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
+import com.devnerd.auth_service.events.models.UserLoginEvent;
+import com.devnerd.auth_service.events.producers.EventProducer;
 import com.devnerd.auth_service.exception.AuthenticationException;
 import com.devnerd.auth_service.exception.WeakPasswordException;
 import com.devnerd.auth_service.model.AuthUser;
@@ -24,6 +26,8 @@ public class AuthService {
   private final UserClient userClient;
   private final AuthUserRepository authUserRepository;
   private final TokenUtils tokenUtils;
+  private final EventProducer eventProducer;
+  private final SessionStorageService sessionStorageService;
 
   public RegisterResponseDTO registerUser(RegisterRequestDTO registerRequestDTO) {
 
@@ -73,19 +77,29 @@ public class AuthService {
       throw new AuthenticationException("Invalid credentials");
     }
 
+    String sessionId = tokenUtils.generateSessionId();
+
     //genereate jwt and session id
     String jwtToken = tokenUtils.generateToken(
       authUser.getUserId().toString(),
       authUser.getEmail(),
       authUser.getRole(),
-      tokenUtils.generateSessionId()
+      sessionId
     );
 
     AuthenticationResponseDTO response = new AuthenticationResponseDTO(
       jwtToken
     );
 
+    sessionStorageService.createBasicSession(authUser.getUserId(),sessionId);
+
     //emit an event to enrich the session store
+    UserLoginEvent loginEvent = new UserLoginEvent(
+      authUser.getUserId(),
+      sessionId,
+      System.currentTimeMillis()
+    );
+    eventProducer.publishUserLoginEvent(loginEvent);
 
     return response;
   }
