@@ -8,15 +8,15 @@ import com.devnerd.auth_service.dto.AuthenticationResponseDTO;
 import com.devnerd.auth_service.dto.RegisterRequestDTO;
 import com.devnerd.auth_service.dto.RegisterResponseDTO;
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
+import com.devnerd.auth_service.dto.UserDetailsResponseDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
-import com.devnerd.auth_service.events.producers.EventProducer;
 import com.devnerd.auth_service.exception.AuthenticationException;
 import com.devnerd.auth_service.exception.WeakPasswordException;
 import com.devnerd.auth_service.model.AuthUser;
+import com.devnerd.auth_service.model.UserSession;
 import com.devnerd.auth_service.repositories.jpa.AuthUserRepository;
 import com.devnerd.auth_service.utils.PasswordUtils;
 import com.devnerd.auth_service.utils.TokenUtils;
-import com.devnerd.events.models.UserLoginEvent;
 
 import lombok.AllArgsConstructor;
 
@@ -26,7 +26,6 @@ public class AuthService {
   private final UserClient userClient;
   private final AuthUserRepository authUserRepository;
   private final TokenUtils tokenUtils;
-  private final EventProducer eventProducer;
   private final SessionStorageService sessionStorageService;
 
   public RegisterResponseDTO registerUser(RegisterRequestDTO registerRequestDTO) {
@@ -91,15 +90,21 @@ public class AuthService {
       jwtToken
     );
 
-    sessionStorageService.createBasicSession(authUser.getUserId(),sessionId);
+    //call the user service and get the user details
+    UserDetailsResponseDTO userResponse = userClient.getUser(authUser.getUserId());
 
-    //emit an event to enrich the session store
-    UserLoginEvent loginEvent = new UserLoginEvent(
-      authUser.getUserId(),
-      sessionId,
-      System.currentTimeMillis()
-    );
-    eventProducer.publishUserLoginEvent(loginEvent);
+    UserSession session = UserSession.builder()
+      .sessionId(sessionId)
+      .userId(authUser.getUserId())
+      .phoneNumber(userResponse.getPhoneNumber())
+      .firstName(userResponse.getFirstName())
+      .lastName(userResponse.getLastName())
+      .email(userResponse.getEmail())
+      .userName(userResponse.getUserName())
+      .expiry(0L)
+      .build();
+
+    sessionStorageService.createSession(session);
 
     return response;
   }

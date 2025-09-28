@@ -14,9 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SessionStorageService {
   private final UserSessionRepository userSessionRepository;
 
-  public void createBasicSession(Long userId,String sessionId){
-    UserSession session = UserSession.builder().userId(userId).sessionId(sessionId).build();
+  public void createSession(UserSession session) {
     userSessionRepository.save(session);
-    log.info("Created basic session for user: {} with sessionId: {}", userId, sessionId);
+    log.info("Created basic session for user: {} with sessionId: {}", session.getUserId(), session.getSessionId());
   }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.devnerd.user_service.dto.RegisterUserRequestDTO;
 import com.devnerd.user_service.dto.RegisterUserResponseDTO;
+import com.devnerd.user_service.dto.UserDetailsResponseDTO;
 import com.devnerd.user_service.exception.DuplicateResourceException;
 import com.devnerd.user_service.models.UserModel;
 import com.devnerd.user_service.repositories.jpa.UserRepository;
@@ -43,6 +44,20 @@ public class UserService {
             .build();
 
     return registerUserResponseDTO;
+  }
+
+  public UserDetailsResponseDTO getUserDetails(Long userId) {
+    UserModel user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    UserDetailsResponseDTO response = UserDetailsResponseDTO.builder()
+            .userId(user.getId())
+            .email(user.getEmail())
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .phoneNumber(user.getPhoneNumber())
+            .userName(user.getUsername())
+            .build();
+    return response;
   }
   
 }

@@ -5,10 +5,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
+import com.devnerd.auth_service.dto.UserDetailsResponseDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 
 @FeignClient(name = "USER-SERVICE")
 public interface UserClient {
   @PostMapping("/api/v1/user/create-user")
   UserReponseDTO registerUser(@RequestBody RegisterUserRequestDTO request);
+
+  @PostMapping("/api/v1/user/get-user-details")
+  UserDetailsResponseDTO getUser(@RequestBody Long userId);
 }
