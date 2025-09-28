@@ -3,7 +3,7 @@ package com.devnerd.auth_service.events.producers;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.devnerd.auth_service.events.models.UserLoginEvent;
+import com.devnerd.events.models.UserLoginEvent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

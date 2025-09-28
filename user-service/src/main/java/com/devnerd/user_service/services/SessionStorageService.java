@@ -2,7 +2,7 @@ package com.devnerd.user_service.services;
 
 import org.springframework.stereotype.Service;
 
-import com.devnerd.user_service.events.models.UserLoginEvent;
+import com.devnerd.events.models.UserLoginEvent;
 import com.devnerd.user_service.models.UserModel;
 import com.devnerd.user_service.models.UserSession;
 import com.devnerd.user_service.repositories.jpa.UserRepository;

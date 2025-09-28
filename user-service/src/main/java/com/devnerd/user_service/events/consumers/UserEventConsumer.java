@@ -3,7 +3,7 @@ package com.devnerd.user_service.events.consumers;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.devnerd.user_service.events.models.UserLoginEvent;
+import com.devnerd.events.models.UserLoginEvent;
 import com.devnerd.user_service.services.SessionStorageService;
 
 import lombok.RequiredArgsConstructor;
