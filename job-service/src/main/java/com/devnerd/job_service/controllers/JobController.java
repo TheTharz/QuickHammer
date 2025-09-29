@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devnerd.job_service.dto.GetJobDetailsDTO;
 import com.devnerd.job_service.dto.GetJobsResponseDTO;
 import com.devnerd.job_service.dto.JobCreateRequestDTO;
 import com.devnerd.job_service.dto.JobCreatedResponseDTO;
@@ -32,6 +33,12 @@ public class JobController {
   public ResponseEntity<GetJobsResponseDTO> getAllJobs(@RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size){
     GetJobsResponseDTO response = jobService.getAllJobSummaries(page, size);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/get-job-details")
+  public ResponseEntity<GetJobDetailsDTO> getJobDetails(@RequestParam Long jobId) {
+    GetJobDetailsDTO response = jobService.getJobDetails(jobId);
     return ResponseEntity.ok(response);
   }
 }

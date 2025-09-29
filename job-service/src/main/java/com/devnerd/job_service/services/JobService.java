@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.devnerd.job_service.dto.GetJobDetailsDTO;
 import com.devnerd.job_service.dto.GetJobsResponseDTO;
 import com.devnerd.job_service.dto.JobCreateRequestDTO;
 import com.devnerd.job_service.dto.JobCreatedResponseDTO;
@@ -54,7 +55,25 @@ public class JobService {
             .totalElements(jobPage.getTotalElements())
             .totalPages(jobPage.getTotalPages())
             .build();
-            
+
+    return response;
+  }
+
+  public GetJobDetailsDTO getJobDetails(Long jobId) {
+
+    JobModel job = jobRepository.findById(jobId)
+            .orElseThrow(() -> new RuntimeException("Job not found"));
+    GetJobDetailsDTO response = GetJobDetailsDTO.builder()
+            .jobId(job.getJobId())
+            .title(job.getTitle())
+            .description(job.getDescription())
+            .budget(job.getBudget())
+            .status(job.getStatus())
+            .category(job.getCategory())
+            .clientId(job.getClientId())
+            .createdAt(job.getCreatedAt())
+            .updatedAt(job.getUpdatedAt())
+            .build();
     return response;
   }
   
