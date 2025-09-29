@@ -27,7 +27,7 @@ jobs:
           server-id: github # matches <id> in pom.xml
           settings-path: ${{ github.workspace }}/common-events
           server-username: ${{ github.actor }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
+          server-password: ${{ secrets.QUICK_HAMMER_PAT }}
 
       # Step 3: Build and deploy the submodule
       - name: Build and deploy common-events
