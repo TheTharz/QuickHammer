@@ -10,6 +10,15 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub TheTharz Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TheTharz/QuickHammer</url>
+        </repository>
+    </distributionManagement>
+
+
     <dependencies>
          <!-- JSON serialization support -->
     <dependency>
