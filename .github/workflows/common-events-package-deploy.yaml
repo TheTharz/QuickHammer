@@ -25,7 +25,6 @@ jobs:
           distribution: temurin
           java-version: 17
           server-id: github # matches <id> in pom.xml
-          settings-path: ${{ github.workspace }}/common-events
           server-username: TheTharz
           server-password: ${{ secrets.QUICK_HAMMER_PAT }}
 
