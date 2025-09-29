@@ -71,8 +71,21 @@ services:
     volumes:
       - job_data:/var/lib/postgresql/data
 
+  bid-service-db:
+    image: postgres:15
+    container_name: bid-service-db
+    environment:
+      POSTGRES_DB: biddb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5435:5432"
+    volumes:
+      - bid_data:/var/lib/postgresql/data
+
 volumes:
   auth_data:
   user_data:
   redis_data:
   job_data:
+  bid_data:
