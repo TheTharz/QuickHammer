@@ -59,7 +59,20 @@ services:
       KAFKA_JVM_PERFORMANCE_OPTS: "-XX:+IgnoreUnrecognizedVMOptions -XX:-UseContainerSupport"
       # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
 
+  job-service-db:
+    image: postgres:15
+    container_name: job-service-db
+    environment:
+      POSTGRES_DB: jobdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5434:5432"
+    volumes:
+      - job_data:/var/lib/postgresql/data
+
 volumes:
   auth_data:
   user_data:
   redis_data:
+  job_data:
