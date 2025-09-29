@@ -24,11 +24,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-          server-id: github # matches <id> in pom.xml
-          server-username: ${{ secrets.USERNAME }}
-          server-password: ${{ secrets.QUICK_HAMMER_PAT }}
 
       # Step 3: Build and deploy the submodule
       - name: Build and deploy common-events
         working-directory: common-events
-        run: mvn clean deploy
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.QUICK_HAMMER_PAT }}
