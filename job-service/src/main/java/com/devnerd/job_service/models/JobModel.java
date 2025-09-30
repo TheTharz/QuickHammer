@@ -48,6 +48,9 @@ public class JobModel {
   @Column(nullable = false)
   private Long clientId;
 
+  @Column()
+  private Long assignedToId;
+
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
 

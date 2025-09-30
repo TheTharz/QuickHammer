@@ -7,21 +7,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.devnerd.events.models.JobAssignedEvent;
 import com.devnerd.job_service.dto.GetJobDetailsDTO;
 import com.devnerd.job_service.dto.GetJobsResponseDTO;
 import com.devnerd.job_service.dto.JobCreateRequestDTO;
 import com.devnerd.job_service.dto.JobCreatedResponseDTO;
 import com.devnerd.job_service.dto.JobSummaryDTO;
+import com.devnerd.job_service.events.producers.EventProducer;
 import com.devnerd.job_service.models.JobModel;
 import com.devnerd.job_service.repository.JobRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 @Service
+@Data
+@AllArgsConstructor
 public class JobService {
   private final JobRepository jobRepository;
-
-  public JobService(JobRepository jobRepository) {
-    this.jobRepository = jobRepository;
-  }
+  private final EventProducer eventProducer;
 
   public JobCreatedResponseDTO createJob(JobCreateRequestDTO jobCreateRequestDTO) {
 
@@ -31,6 +35,7 @@ public class JobService {
       .budget(jobCreateRequestDTO.getBudget())
       .category(jobCreateRequestDTO.getCategory())
       .clientId(jobCreateRequestDTO.getClientId())
+      .assignedToId(null)
       .createdAt(LocalDateTime.now())
       .updatedAt(LocalDateTime.now())
       .status(JobModel.JobStatus.OPEN)
@@ -77,11 +82,15 @@ public class JobService {
     return response;
   }
 
-  public void updateJobOnBIdAccept(Long jobId) {
+  public void updateJobOnBIdAccept(Long jobId,Long assignedToId){ {
     JobModel job = jobRepository.findById(jobId)
             .orElseThrow(() -> new RuntimeException("Job not found"));
     job.setStatus(JobModel.JobStatus.IN_PROGRESS);
+    job.setAssignedToId(assignedToId);
     jobRepository.save(job);
+
+    //publish the event of assigned job
+    eventProducer.publishJobAssignedEvent(JobAssignedEvent.builder().jobId(jobId).assignedToId(assignedToId).build());
   }
-  
+}
 }

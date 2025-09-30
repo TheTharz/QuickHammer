@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class BidAcceptedEvent {
   private Long jobId;
   private Long bidId;
+  private Long assignedToId;
 }

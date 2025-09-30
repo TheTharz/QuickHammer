@@ -18,7 +18,7 @@ public class EventConsumer {
   public void handleBidAcceptedEvent(BidAcceptedEvent event){
     try {
       log.info("Received BidAcceptedEvent for bid: {} for job: {}",event.getBidId(),event.getJobId());
-      jobService.updateJobOnBIdAccept(event.getJobId());
+      jobService.updateJobOnBIdAccept(event.getJobId(),event.getBidId());
     } catch (Exception e) {
       log.error("Failed to handle BidAcceptedEvent for bid: {} for job: {}",event.getBidId(),event.getJobId(),e);
     }
