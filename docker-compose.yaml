@@ -83,9 +83,22 @@ services:
     volumes:
       - bid_data:/var/lib/postgresql/data
 
+  notification-service-db:
+    image: postgres:15
+    container_name: notification-service-db
+    environment:
+      POSTGRES_DB: notificationdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5436:5432"
+    volumes:
+      - notification_data:/var/lib/postgresql/data
+
 volumes:
   auth_data:
   user_data:
   redis_data:
   job_data:
   bid_data:
+  notification_data:
