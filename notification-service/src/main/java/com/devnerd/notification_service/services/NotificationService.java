@@ -53,7 +53,8 @@ public class NotificationService{
            "You have been assigned a new job.\n\n" +
            "Job Title: " + event.getJobTitle() + "\n" +
            "Description: " + event.getJobDescription() + "\n" +
-           "Budget: $" + event.getJobBudget() + "\n\n" +
+           "Initial Budget: $" + event.getJobBudget() + "\n\n" +
+           "Agreed Budget: $" + event.getAgreedBidBudget() + "\n\n" +
            "Please check your dashboard for more details.\n\n" +
            "Regards,\nTeam DevNerd";
   }

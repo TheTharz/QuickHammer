@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.devnerd.events.models.BidAcceptedEvent;
 import com.devnerd.events.models.JobAssignedEvent;
 import com.devnerd.job_service.dto.GetJobDetailsDTO;
 import com.devnerd.job_service.dto.GetJobsResponseDTO;
@@ -36,6 +37,7 @@ public class JobService {
       .category(jobCreateRequestDTO.getCategory())
       .clientId(jobCreateRequestDTO.getClientId())
       .assignedToId(null)
+      .agreedBidBudget(null)
       .createdAt(LocalDateTime.now())
       .updatedAt(LocalDateTime.now())
       .status(JobModel.JobStatus.OPEN)
@@ -82,15 +84,26 @@ public class JobService {
     return response;
   }
 
-  public void updateJobOnBIdAccept(Long jobId,Long assignedToId){ {
-    JobModel job = jobRepository.findById(jobId)
+  public void updateJobOnBidAccept(BidAcceptedEvent event){ {
+    JobModel job = jobRepository.findById(event.getJobId())
             .orElseThrow(() -> new RuntimeException("Job not found"));
     job.setStatus(JobModel.JobStatus.IN_PROGRESS);
-    job.setAssignedToId(assignedToId);
+    job.setAssignedToId(event.getAssignedToId());
+    job.setAgreedBidBudget(event.getBidBudget());
     jobRepository.save(job);
 
     //publish the event of assigned job
-    eventProducer.publishJobAssignedEvent(JobAssignedEvent.builder().jobId(jobId).assignedToId(assignedToId).build());
+    eventProducer.publishJobAssignedEvent(JobAssignedEvent.builder()
+            .jobId(event.getJobId())
+            .assignedToId(event.getAssignedToId())
+            .bidId(event.getBidId())
+            .clientId(job.getClientId())
+            .jobTitle(job.getTitle())
+            .jobDescription(job.getDescription())
+            .jobBudget(job.getBudget())
+            .agreedBidBudget(event.getBidBudget())
+            .jobCategory(job.getCategory())
+            .build());
   }
 }
 }

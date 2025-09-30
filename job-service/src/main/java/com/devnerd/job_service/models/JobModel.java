@@ -51,6 +51,9 @@ public class JobModel {
   @Column()
   private Long assignedToId;
 
+  @Column()
+  private BigDecimal agreedBidBudget;
+
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
 

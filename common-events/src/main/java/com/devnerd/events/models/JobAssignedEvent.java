@@ -19,5 +19,6 @@ public class JobAssignedEvent {
   private String jobTitle;
   private String jobDescription;
   private BigDecimal jobBudget;
+  private BigDecimal agreedBidBudget;
   private String jobCategory;
 }
