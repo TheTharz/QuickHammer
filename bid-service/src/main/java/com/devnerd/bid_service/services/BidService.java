@@ -11,18 +11,20 @@ import com.devnerd.bid_service.dto.CreateBidResponseDTO;
 import com.devnerd.bid_service.dto.GetBidsByJobResponseDTO;
 import com.devnerd.bid_service.dto.UpdateBidRequestDTO;
 import com.devnerd.bid_service.dto.UpdateBidResponseDTO;
+import com.devnerd.bid_service.events.producers.EventProducer;
 import com.devnerd.bid_service.models.BidModel;
 import com.devnerd.bid_service.models.BidModel.BidStatus;
 import com.devnerd.bid_service.repository.BidRepository;
+import com.devnerd.events.models.BidAcceptedEvent;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class BidService {
 
   private final BidRepository bidRepository;
-
-  public BidService(BidRepository bidRepository) {
-    this.bidRepository = bidRepository;
-  }
+  private final EventProducer eventProducer;
 
   public CreateBidResponseDTO createBid(CreateBidRequestDTO createBidRequestDTO) {
     BidModel bidModel = BidModel.builder()
@@ -68,6 +70,30 @@ public class BidService {
       .totalPages(bids.getTotalPages())
       .build();
 
+    return response;
+  }
+
+  public UpdateBidResponseDTO acceptBid(Long bidId) {
+    BidModel bid =bidRepository.findById(bidId)
+      .orElseThrow(() -> new RuntimeException("Bid not found"));
+
+    if(bid.getStatus() != BidStatus.PENDING){
+      throw new RuntimeException("Only pending bids can be accepted");
+    }
+
+    Long jobId = bid.getJobId();
+
+    bid.setStatus(BidStatus.ACCEPTED);
+
+    //update job status to inprogress emit event
+    eventProducer.publishBidAcceptedEvent(new BidAcceptedEvent(bid.getBidId(), jobId));
+
+    //invalidate other bids on this jobId other than this bidId
+    bidRepository.rejectOtherBids(jobId, bidId);
+
+    bidRepository.save(bid);
+
+    UpdateBidResponseDTO response = UpdateBidResponseDTO.builder().bidId(bid.getBidId()).build();
     return response;
   }
   

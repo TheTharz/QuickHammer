@@ -68,6 +68,11 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+    <groupId>com.devnerd</groupId>
+    <artifactId>common-events</artifactId>
+    <version>1.0.0</version>
+</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

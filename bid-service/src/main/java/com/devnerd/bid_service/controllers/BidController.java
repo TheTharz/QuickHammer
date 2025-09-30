@@ -44,4 +44,10 @@ public class BidController {
     GetBidsByJobResponseDTO response = bidService.getBidsByJob(jobId, page, size);
     return ResponseEntity.ok(response);
   }
+
+  @PostMapping("/accept-bid")
+  public ResponseEntity<UpdateBidResponseDTO> acceptBid(@RequestParam Long bidId) {
+    UpdateBidResponseDTO response = bidService.acceptBid(bidId);
+    return ResponseEntity.ok(response);
+  }
 }

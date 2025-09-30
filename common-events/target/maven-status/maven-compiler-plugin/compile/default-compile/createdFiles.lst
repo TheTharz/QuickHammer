@@ -1,1 +1,2 @@
 com/devnerd/events/models/UserLoginEvent.class
+com/devnerd/events/models/BidAcceptedEvent.class
