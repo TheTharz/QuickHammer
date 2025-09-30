@@ -17,7 +17,7 @@ public interface BidRepository extends JpaRepository<BidModel, Long> {
 
   @Transactional
   @Modifying
-  @Query("UPDATE BidModel b b.status = 'REJECTED' WHERE b.jobId = :jobId AND b.bidId <> :acceptedBidId AND b.status = 'PENDING'")
+  @Query("UPDATE BidModel b SET b.status = 'REJECTED' WHERE b.jobId = :jobId AND b.bidId <> :acceptedBidId AND b.status = 'PENDING'")
   int rejectOtherBids(Long jobId, Long acceptedBidId);
 
 }

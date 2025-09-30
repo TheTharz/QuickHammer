@@ -76,5 +76,12 @@ public class JobService {
             .build();
     return response;
   }
+
+  public void updateJobOnBIdAccept(Long jobId) {
+    JobModel job = jobRepository.findById(jobId)
+            .orElseThrow(() -> new RuntimeException("Job not found"));
+    job.setStatus(JobModel.JobStatus.IN_PROGRESS);
+    jobRepository.save(job);
+  }
   
 }
