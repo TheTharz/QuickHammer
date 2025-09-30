@@ -1,4 +1,4 @@
-package com.devnerd.job_service.events.config;
+package com.devnerd.notification_service.events.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class KafkaConsumerConfig {
     Map<String,Object> props = new HashMap<>();
 
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstapServers);
-    props.put(ConsumerConfig.GROUP_ID_CONFIG,"user-service-group");
+    props.put(ConsumerConfig.GROUP_ID_CONFIG,"notification-service-group");
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,ErrorHandlingDeserializer.class);
     props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,JsonDeserializer.class.getName());
