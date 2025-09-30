@@ -17,8 +17,8 @@ public class EventConsumer {
   @KafkaListener(topics = "bid.accepted", groupId = "job-service-group")
   public void handleBidAcceptedEvent(BidAcceptedEvent event){
     try {
-      log.info("Received BidAcceptedEvent for bid: {} for job: {}",event.getBidId(),event.getJobId());
-      jobService.updateJobOnBIdAccept(event.getJobId(),event.getBidId());
+      log.info("Received BidAcceptedEvent for bid: {} for job: {} assigned to: {}",event.getBidId(),event.getJobId(),event.getAssignedToId());
+      jobService.updateJobOnBIdAccept(event.getJobId(),event.getAssignedToId());
     } catch (Exception e) {
       log.error("Failed to handle BidAcceptedEvent for bid: {} for job: {}",event.getBidId(),event.getJobId(),e);
     }

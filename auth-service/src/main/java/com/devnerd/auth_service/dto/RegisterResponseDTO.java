@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RegisterResponseDTO {
-  private String userId;
+  private Long userId;
 }

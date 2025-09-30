@@ -86,7 +86,7 @@ public class BidService {
     bid.setStatus(BidStatus.ACCEPTED);
 
     //update job status to inprogress emit event
-    eventProducer.publishBidAcceptedEvent(new BidAcceptedEvent( jobId,bidId,bid.getBidderId()));
+    eventProducer.publishBidAcceptedEvent(BidAcceptedEvent.builder().jobId(jobId).bidId(bidId).assignedToId(bid.getBidderId()).build());
 
     //invalidate other bids on this jobId other than this bidId
     bidRepository.rejectOtherBids(jobId, bidId);

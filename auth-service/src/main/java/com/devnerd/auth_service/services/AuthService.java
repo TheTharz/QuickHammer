@@ -60,7 +60,7 @@ public class AuthService {
     AuthUser savedUser = authUserRepository.save(authUser);
 
     RegisterResponseDTO registerResponseDTO = new RegisterResponseDTO(
-      savedUser.getUserId().toString()
+      savedUser.getUserId()
     );
 
     return registerResponseDTO;
