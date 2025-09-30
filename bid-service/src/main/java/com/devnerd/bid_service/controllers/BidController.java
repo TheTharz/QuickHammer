@@ -1,6 +1,7 @@
 package com.devnerd.bid_service.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devnerd.bid_service.dto.CreateBidRequestDTO;
 import com.devnerd.bid_service.dto.CreateBidResponseDTO;
+import com.devnerd.bid_service.dto.GetBidsByJobResponseDTO;
 import com.devnerd.bid_service.dto.UpdateBidRequestDTO;
 import com.devnerd.bid_service.dto.UpdateBidResponseDTO;
 import com.devnerd.bid_service.services.BidService;
@@ -33,6 +35,13 @@ public class BidController {
   @PutMapping("/update-bid")
   public ResponseEntity<UpdateBidResponseDTO> updateBid(@RequestParam Long bidId, @RequestBody UpdateBidRequestDTO updateBidRequestDTO) {
     UpdateBidResponseDTO response = bidService.updateBid(updateBidRequestDTO, bidId);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/bids-by-job")
+  public ResponseEntity<GetBidsByJobResponseDTO> getBidsByJob(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,@RequestParam Long jobId) {
+    GetBidsByJobResponseDTO response = bidService.getBidsByJob(jobId, page, size);
     return ResponseEntity.ok(response);
   }
 }

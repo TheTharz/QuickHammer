@@ -1,9 +1,14 @@
 package com.devnerd.bid_service.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.devnerd.bid_service.dto.BidSummaryDTO;
 import com.devnerd.bid_service.dto.CreateBidRequestDTO;
 import com.devnerd.bid_service.dto.CreateBidResponseDTO;
+import com.devnerd.bid_service.dto.GetBidsByJobResponseDTO;
 import com.devnerd.bid_service.dto.UpdateBidRequestDTO;
 import com.devnerd.bid_service.dto.UpdateBidResponseDTO;
 import com.devnerd.bid_service.models.BidModel;
@@ -47,6 +52,22 @@ public class BidService {
     bidRepository.save(bid);
 
     UpdateBidResponseDTO response = UpdateBidResponseDTO.builder().bidId(bid.getBidId()).build();
+    return response;
+  }
+
+  public GetBidsByJobResponseDTO getBidsByJob(Long jobId, Integer page, Integer size) {
+    Page<BidSummaryDTO> bids = bidRepository.findByJobId(
+      jobId,
+      PageRequest.of(page, size, Sort.by("updatedAt").descending())
+    );
+    GetBidsByJobResponseDTO response = GetBidsByJobResponseDTO.builder().bids(
+      bids.getContent())
+      .page(bids.getNumber())
+      .size(bids.getSize())
+      .totalElements(bids.getTotalElements())
+      .totalPages(bids.getTotalPages())
+      .build();
+
     return response;
   }
   
