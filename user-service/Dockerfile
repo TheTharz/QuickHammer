@@ -6,18 +6,16 @@ ARG GITHUB_TOKEN
 
 # Configure Maven to use GitHub Packages
 RUN mkdir -p /root/.m2
-# Correct way to create settings.xml with here-document
-RUN /bin/sh -c 'cat <<EOF > /root/.m2/settings.xml
-<settings>
-  <servers>
-    <server>
-      <id>github</id>
-      <username>TheTharz</username>
-      <password>${GITHUB_TOKEN}</password>
-    </server>
-  </servers>
-</settings>
-EOF'
+# Write settings.xml using multiple echo commands
+RUN echo "<settings>" > /root/.m2/settings.xml && \
+    echo "  <servers>" >> /root/.m2/settings.xml && \
+    echo "    <server>" >> /root/.m2/settings.xml && \
+    echo "      <id>github</id>" >> /root/.m2/settings.xml && \
+    echo "      <username>TheTharz</username>" >> /root/.m2/settings.xml && \
+    echo "      <password>${GITHUB_TOKEN}</password>" >> /root/.m2/settings.xml && \
+    echo "    </server>" >> /root/.m2/settings.xml && \
+    echo "  </servers>" >> /root/.m2/settings.xml && \
+    echo "</settings>" >> /root/.m2/settings.xml
 
 WORKDIR /app
 COPY . .
