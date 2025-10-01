@@ -11,7 +11,7 @@ RUN echo "<settings>\
     <server>\
       <id>github</id>\
       <username>TheTharz</username>\
-      <password>${GITHUB_TOKEN}</password>\
+      <password>${env.GITHUB_TOKEN}</password>\
     </server>\
   </servers>\
 </settings>" > /root/.m2/settings.xml
