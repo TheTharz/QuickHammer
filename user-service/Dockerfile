@@ -2,7 +2,6 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 # Build args for private GitHub package
-ARG GITHUB_USERNAME
 ARG GITHUB_TOKEN
 
 # Configure Maven to use GitHub Packages
