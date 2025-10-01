@@ -6,15 +6,17 @@ ARG GITHUB_TOKEN
 
 # Configure Maven to use GitHub Packages
 RUN mkdir -p /root/.m2
-RUN echo "<settings>\
-  <servers>\
-    <server>\
-      <id>github</id>\
-      <username>TheTharz</username>\
-      <password>${env.GITHUB_TOKEN}</password>\
-    </server>\
-  </servers>\
-</settings>" > /root/.m2/settings.xml
+RUN sh -c "cat > /root/.m2/settings.xml <<EOF
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>TheTharz</username>
+      <password>${GITHUB_TOKEN}</password>
+    </server>
+  </servers>
+</settings>
+EOF"
 
 WORKDIR /app
 COPY . .
