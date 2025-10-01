@@ -6,7 +6,8 @@ ARG GITHUB_TOKEN
 
 # Configure Maven to use GitHub Packages
 RUN mkdir -p /root/.m2
-RUN sh -c "cat > /root/.m2/settings.xml <<EOF
+# Correct way to create settings.xml with here-document
+RUN /bin/sh -c 'cat <<EOF > /root/.m2/settings.xml
 <settings>
   <servers>
     <server>
@@ -16,7 +17,7 @@ RUN sh -c "cat > /root/.m2/settings.xml <<EOF
     </server>
   </servers>
 </settings>
-EOF"
+EOF'
 
 WORKDIR /app
 COPY . .
