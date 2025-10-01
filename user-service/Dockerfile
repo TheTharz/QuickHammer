@@ -11,7 +11,7 @@ RUN echo "<settings>\
   <servers>\
     <server>\
       <id>github</id>\
-      <username>${GITHUB_USERNAME}</username>\
+      <username>TheTharz</username>\
       <password>${GITHUB_TOKEN}</password>\
     </server>\
   </servers>\

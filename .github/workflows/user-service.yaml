@@ -24,7 +24,6 @@ jobs:
       - name: Build and push user-service
         run: |
           docker build \
-            --build-arg GITHUB_USERNAME=${{ github.actor }} \
             --build-arg GITHUB_TOKEN=${{ secrets.QUICKHAMMER_WORKFLOW_TOKEN }} \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/quickhammer-user-service:latest \
             ./user-service
