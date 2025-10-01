@@ -28,4 +28,4 @@ jobs:
             ./user-service
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/quickhammer-user-service:latest
         env:
-          GITHUB_TOKEN: ${{ secrets.QUICKHAMMER_WORKFLOW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.QUICK_HAMMER_PAT }}
