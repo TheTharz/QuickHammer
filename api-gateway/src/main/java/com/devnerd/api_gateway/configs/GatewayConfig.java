@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Configuration;
 
 import com.devnerd.api_gateway.filters.JwtAuthFilter;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Configuration
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class GatewayConfig {
   private final JwtAuthFilter jwtAuthFilter;
 
   @Bean
-    public RouteLocator routes(RouteLocatorBuilder builder) {
+  public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
             .route("auth-service", r -> r.path("/api/v1/auth/**")
                 .uri("lb://auth-service"))

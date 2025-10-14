@@ -9,15 +9,20 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class TokenUtils {
-  private final Key secretKey;
+  private Key secretKey;
+  private final String secret;
 
-  public TokenUtils(String secret) {
-    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+  private Key getSecretKey(){
+    if(secretKey == null){
+      secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    return secretKey;
   }
 
   public Claims validateToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(getSecretKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

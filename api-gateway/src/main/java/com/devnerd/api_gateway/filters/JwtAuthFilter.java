@@ -13,11 +13,11 @@ import com.devnerd.api_gateway.utils.TokenUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class JwtAuthFilter implements GatewayFilter,Ordered{
   private final TokenUtils tokenUtils;
 
