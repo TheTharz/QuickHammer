@@ -37,13 +37,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "Pulling latest configs..."
-            cd /home/ubuntu/quickhammer-configs && git pull
+            cd /home/ubuntu/quickhammer_configs && git pull
             
             echo "Pulling latest bid-service image..."
-            cd /home/ubuntu/quickhammer && docker compose pull bid-service
+            cd /home/ubuntu/quickhammer_configs && docker compose pull bid-service
             
             echo "Restarting bid-service..."
-            cd /home/ubuntu/quickhammer && docker compose up -d bid-service
+            cd /home/ubuntu/quickhammer_configs && docker compose up -d bid-service
             
             echo "Cleaning up unused images..."
             docker image prune -f

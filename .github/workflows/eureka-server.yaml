@@ -37,13 +37,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "Pulling latest configs..."
-            cd /home/ubuntu/quickhammer-configs && git pull
+            cd /home/ubuntu/quickhammer_configs && git pull
             
             echo "Pulling latest eureka-server image..."
-            cd /home/ubuntu/quickhammer && docker compose pull eureka-server
+            cd /home/ubuntu/quickhammer_configs && docker compose pull eureka-server
             
             echo "Restarting eureka-server..."
-            cd /home/ubuntu/quickhammer && docker compose up -d eureka-server
+            cd /home/ubuntu/quickhammer_configs && docker compose up -d eureka-server
             
             echo "Cleaning up unused images..."
             docker image prune -f
