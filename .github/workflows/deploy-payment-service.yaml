@@ -20,16 +20,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "Pulling latest configs..."
-            cd /home/ubuntu/quickhammer-configs
-            git pull
-
+            cd /home/ubuntu/quickhammer-configs && git pull
+            
             echo "Pulling latest payment-service image..."
-            cd /home/ubuntu/quickhammer
-            docker compose pull payment-service
-
+            cd /home/ubuntu/quickhammer && docker compose pull payment-service
+            
             echo "Restarting payment-service..."
-            docker compose up -d payment-service
-
+            cd /home/ubuntu/quickhammer && docker compose up -d payment-service
+            
             echo "Cleaning up unused images..."
             docker image prune -f
 
