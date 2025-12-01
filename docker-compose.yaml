@@ -129,7 +129,7 @@ services:
 
   # Eureka Server
   eureka-server:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-eureka-server:latest
+    image: thetharz/quickhammer-eureka-server:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -139,10 +139,10 @@ services:
 
   # Microservices
   auth-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-auth-service:latest
+    image: thetharz/quickhammer-auth-service:latest
     container_name: auth-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/auth_service/.env
+      - /home/ubuntu/quickhammer-configs/auth-service/.env
     ports:
       - "8080:8080"
     depends_on:
@@ -155,12 +155,10 @@ services:
     restart: unless-stopped
 
   bid-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-bid-service:latest
+    image: thetharz/quickhammer-bid-service:latest
     container_name: bid-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/bid_service/.env
-    environment:
-      DATABASE_URL: jdbc:postgresql://bid-service-db:5432/biddb
+      - /home/ubuntu/quickhammer-configs/bid-service/.env
     ports:
       - "8081:8081"
     depends_on:
@@ -172,12 +170,10 @@ services:
     restart: unless-stopped
 
   job-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-job-service:latest
+    image: thetharz/quickhammer-job-service:latest
     container_name: job-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/job_service/.env
-    environment:
-      DATABASE_URL: jdbc:postgresql://job-service-db:5432/jobdb
+      - /home/ubuntu/quickhammer-configs/job-service/.env
     ports:
       - "8082:8082"
     depends_on:
@@ -189,12 +185,10 @@ services:
     restart: unless-stopped
 
   notification-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-notification-service:latest
+    image: thetharz/quickhammer-notification-service:latest
     container_name: notification-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/notification_service/.env
-    environment:
-      DATABASE_URL: jdbc:postgresql://notification-service-db:5432/notificationdb
+      - /home/ubuntu/quickhammer-configs/notification-service/.env
     ports:
       - "8083:8083"
     depends_on:
@@ -206,12 +200,10 @@ services:
     restart: unless-stopped
 
   payment-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-payment-service:latest
+    image: thetharz/quickhammer-payment-service:latest
     container_name: payment-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/payment_service/.env
-    environment:
-      DATABASE_URL: jdbc:postgresql://payment-service-db:5432/paymentdb
+      - /home/ubuntu/quickhammer-configs/payment-service/.env
     ports:
       - "8084:8084"
     depends_on:
@@ -222,12 +214,10 @@ services:
     restart: unless-stopped
 
   user-service:
-    image: ${DOCKERHUB_USERNAME}/quickhammer-user-service:latest
+    image: thetharz/quickhammer-user-service:latest
     container_name: user-service
     env_file:
-      - /home/ubuntu/quickhammer-configs/user_service/.env
-    environment:
-      DATABASE_URL: jdbc:postgresql://user-service-db:5432/userdb
+      - /home/ubuntu/quickhammer-configs/user-service/.env
     ports:
       - "8085:8085"
     depends_on:
@@ -239,19 +229,18 @@ services:
       - quickhammer-network
     restart: unless-stopped
 
-  # API Gateway (if workflow exists, uncomment)
-  # api-gateway:
-  #   image: ${DOCKERHUB_USERNAME}/quickhammer-api-gateway:latest
-  #   container_name: api-gateway
-  #   env_file:
-  #     - /home/ubuntu/quickhammer-configs/api_gateway/.env
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - eureka-server
-  #   networks:
-  #     - quickhammer-network
-  #   restart: unless-stopped
+  api-gateway:
+    image: thetharz/quickhammer-api-gateway:latest
+    container_name: api-gateway
+    env_file:
+      - /home/ubuntu/quickhammer-configs/api-gateway/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - eureka-server
+    networks:
+      - quickhammer-network
+    restart: unless-stopped
 
 networks:
   quickhammer-network:

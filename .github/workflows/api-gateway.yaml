@@ -1,4 +1,4 @@
-name: Build & Push User Service
+name: Build & Push API Gateway
 
 on:
   push:

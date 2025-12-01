@@ -1,4 +1,4 @@
-name: Build & Push BId Service
+name: Build & Push Bid Service
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Build & Push User Service
+name: Build & Push Payment Service
 
 on:
   push:
