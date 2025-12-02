@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class StripeWebHookController {
   private final StripeWebHookService webhookService;
 
-  @Value("${stripe.webhook.secret:${STRIPE_WEBHOOK_SECRET}}")
+  @Value("${payment.webhook-secret}")
   private String endpointSecret;
 
     @PostMapping
