@@ -24,8 +24,17 @@ public class GatewayConfig {
                         .uri("lb://auth-service"))
 
                 // JOB SERVICE
-                .route("job-service", r -> r
-                        .path("/api/v1/jobs/**", "/job-service/**")    // Add swagger route
+                .route("job-service-swagger", r -> r
+                        .path(
+                                "/job-service/api-docs/**",
+                                "/job-service/swagger-ui.html",
+                                "/job-service/swagger-ui/**"
+                        )
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("lb://job-service"))
+
+                .route("job-service-secured", r -> r
+                        .path("/api/v1/jobs/**", "/job-service/**")
                         .filters(f -> f.filter(jwtAuthFilter).stripPrefix(1))
                         .uri("lb://job-service"))
 

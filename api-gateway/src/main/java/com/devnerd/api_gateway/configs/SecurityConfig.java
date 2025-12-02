@@ -22,6 +22,10 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/webjars/**",
 
+                                "/job-service/api-docs/**",
+                                "/job-service/swagger-ui.html",
+                                "/job-service/swagger-ui/**",
+
                                 "/user-service/**",
                                 "/auth-service/**",
                                 "/bid-service/**",
