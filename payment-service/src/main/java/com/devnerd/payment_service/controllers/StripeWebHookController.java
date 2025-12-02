@@ -2,9 +2,11 @@ package com.devnerd.payment_service.controllers;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devnerd.payment_service.exceptions.StripeServiceException;
@@ -14,13 +16,16 @@ import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@RestController("/api/v1/stripe-webhook")
-@AllArgsConstructor
+@RestController
+@RequestMapping("/api/v1/stripe-webhook")
+@RequiredArgsConstructor
 public class StripeWebHookController {
   private final StripeWebHookService webhookService;
-  private final String endpointSecret = System.getenv("STRIPE_WEBHOOK_SECRET");
+
+  @Value("${stripe.webhook.secret:${STRIPE_WEBHOOK_SECRET}}")
+  private String endpointSecret;
 
     @PostMapping
     public ResponseEntity<String> handleWebhook(HttpServletRequest request,@RequestHeader("Stripe-Signature") String sigHeader) {
