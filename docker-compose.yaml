@@ -242,6 +242,17 @@ services:
       - quickhammer-network
     restart: unless-stopped
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - JAVA_OPTS=-Xms256m -Xmx512m
+    networks:
+      - quickhammer-network
+    restart: unless-stopped
+
 networks:
   quickhammer-network:
     driver: bridge
