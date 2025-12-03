@@ -1,0 +1,67 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'quickhammer-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'api-gateway'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['api-gateway:5000']
+        labels:
+          application: 'api-gateway'
+
+  - job_name: 'auth-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['auth-service:8080']
+        labels:
+          application: 'auth-service'
+
+  - job_name: 'user-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['user-service:8085']
+        labels:
+          application: 'user-service'
+
+  - job_name: 'job-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['job-service:8082']
+        labels:
+          application: 'job-service'
+
+  - job_name: 'bid-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['bid-service:8081']
+        labels:
+          application: 'bid-service'
+
+  - job_name: 'payment-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['payment-service:8084']
+        labels:
+          application: 'payment-service'
+
+  - job_name: 'notification-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['notification-service:8083']
+        labels:
+          application: 'notification-service'
+
+  - job_name: 'eureka-server'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['eureka-server:8761']
+        labels:
+          application: 'eureka-server'
+
