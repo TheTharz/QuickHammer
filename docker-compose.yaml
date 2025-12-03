@@ -131,6 +131,8 @@ services:
   eureka-server:
     image: thetharz/quickhammer-eureka-server:latest
     container_name: eureka-server
+    env_file:
+      - /home/ubuntu/quickhammer_configs/eureka_server/.env
     ports:
       - "8761:8761"
     networks:
