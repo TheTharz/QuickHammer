@@ -10,32 +10,33 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityWebFilterChain security(ServerHttpSecurity http) {
+        @Bean
+        public SecurityWebFilterChain security(ServerHttpSecurity http) {
 
-        return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(ex -> ex
-                        .pathMatchers(
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/webjars/**",
+                return http
+                                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                                .authorizeExchange(ex -> ex
+                                                .pathMatchers(
+                                                                "/swagger-ui.html",
+                                                                "/swagger-ui/**",
+                                                                "/v3/api-docs/**",
+                                                                "/webjars/**",
 
-                                "/job-service/api-docs/**",
-                                "/job-service/swagger-ui.html",
-                                "/job-service/swagger-ui/**",
+                                                                "/job-service/api-docs/**",
+                                                                "/job-service/swagger-ui.html",
+                                                                "/job-service/swagger-ui/**",
 
-                                "/user-service/**",
-                                "/auth-service/**",
-                                "/bid-service/**",
-                                "/job-service/**",
-                                "/notification-service/**",
-                                "/payment-service/**"
-                        ).permitAll()
+                                                                "/user-service/**",
+                                                                "/auth-service/**",
+                                                                "/api/v1/auth/**",
+                                                                "/bid-service/**",
+                                                                "/job-service/**",
+                                                                "/notification-service/**",
+                                                                "/payment-service/**")
+                                                .permitAll() // here all the routes have been opened later remove routes
+                                                             // that need the authentication
 
-                        .anyExchange().authenticated()
-                )
-                .build();
-    }
+                                                .anyExchange().authenticated())
+                                .build();
+        }
 }

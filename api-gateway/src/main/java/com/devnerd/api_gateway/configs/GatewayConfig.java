@@ -12,55 +12,92 @@ import lombok.AllArgsConstructor;
 @Configuration
 @AllArgsConstructor
 public class GatewayConfig {
-  private final JwtAuthFilter jwtAuthFilter;
+        private final JwtAuthFilter jwtAuthFilter;
 
-  @Bean
-  public RouteLocator routes(RouteLocatorBuilder builder) {
-        return builder.routes()
-                // AUTH SERVICE
-                .route("auth-service", r -> r
-                        .path("/api/v1/auth/**", "/auth-service/**")   // Add swagger route
-                        .filters(f -> f.stripPrefix(1))                // remove "/auth-service" prefix
-                        .uri("lb://auth-service"))
+        @Bean
+        public RouteLocator routes(RouteLocatorBuilder builder) {
+                return builder.routes()
+                                // AUTH SERVICE
+                                .route("auth-service-exposed", r -> r
+                                                .path("/api/v1/auth/register", "/api/v1/auth/login")
+                                                .uri("lb://auth-service"))
 
-                // JOB SERVICE
-                .route("job-service-swagger", r -> r
-                        .path(
-                                "/job-service/api-docs/**",
-                                "/job-service/swagger-ui.html",
-                                "/job-service/swagger-ui/**"
-                        )
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://job-service"))
+                                .route("auth-service-swagger", r -> r
+                                                .path("/auth-service/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://auth-service"))
 
-                .route("job-service-secured", r -> r
-                        .path("/api/v1/jobs/**", "/job-service/**")
-                        .filters(f -> f.filter(jwtAuthFilter).stripPrefix(1))
-                        .uri("lb://job-service"))
+                                .route("auth-service-secured", r -> r
+                                                .path("/api/v1/auth/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://auth-service"))
 
-                // USER SERVICE
-                .route("user-service", r -> r
-                        .path("/user-service/**")                      // Add swagger route
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://user-service"))
+                                // JOB SERVICE
+                                .route("job-service-swagger", r -> r
+                                                .path(
+                                                                "/job-service/api-docs/**",
+                                                                "/job-service/swagger-ui.html",
+                                                                "/job-service/swagger-ui/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://job-service"))
 
-                // BID SERVICE
-                .route("bid-service", r -> r
-                        .path("/bid-service/**")                       // Add swagger route
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://bid-service"))
+                                .route("job-service-secured", r -> r
+                                                .path("/api/v1/jobs/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://job-service"))
 
-                // NOTIFICATION SERVICE
-                .route("notification-service", r -> r
-                        .path("/notification-service/**")              // Add swagger route
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://notification-service"))
+                                // USER SERVICE
+                                .route("user-service-swagger", r -> r
+                                                .path("/user-service/api-docs/**",
+                                                                "/user-service/swagger-ui.html",
+                                                                "/user-service/swagger-ui/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://user-service"))
 
-                // PAYMENT SERVICE
-                .route("payment-service", r -> r
-                        .path("/payment-service/**")                   // Add swagger route
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://payment-service"))
-            .build();
-    }
+                                .route("user-service-secured", r -> r
+                                                .path("/api/v1/users/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://user-service"))
+
+                                // BID SERVICE
+                                .route("bid-service-swagger", r -> r
+                                                .path("/bid-service/api-docs/**",
+                                                                "/bid-service/swagger-ui.html",
+                                                                "/bid-service/swagger-ui/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://bid-service"))
+
+                                .route("bid-service-secured", r -> r
+                                                .path("/api/v1/bids/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://bid-service"))
+
+                                // NOTIFICATION SERVICE
+                                .route("notification-service-swagger", r -> r
+                                                .path("/notification-service/api-docs/**",
+                                                                "/notification-service/swagger-ui.html",
+                                                                "/notification-service/swagger-ui/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://notification-service"))
+
+                                .route("notification-service-secured", r -> r
+                                                .path("/api/v1/notifications/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://notification-service"))
+
+                                // PAYMENT SERVICE
+                                .route("payment-service-swagger", r -> r
+                                                .path("/payment-service/api-docs/**",
+                                                                "/payment-service/swagger-ui.html",
+                                                                "/payment-service/swagger-ui/**")
+                                                .filters(f -> f.stripPrefix(1))
+                                                .uri("lb://payment-service"))
+
+                                .route("payment-service-secured", r -> r
+                                                .path("/api/v1/payments/**")
+                                                .filters(f -> f.filter(jwtAuthFilter))
+                                                .uri("lb://payment-service"))
+
+                                .build();
+        }
 }

@@ -17,7 +17,7 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9093:9092"
+      - "9092:9092"
       - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
@@ -38,7 +38,7 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
-    command: [ "redis-server", "--appendonly", "yes" ]
+    command: ["redis-server", "--appendonly", "yes"]
     networks:
       - quickhammer-network
 
@@ -132,7 +132,7 @@ services:
     image: thetharz/quickhammer-eureka-server:latest
     container_name: eureka-server
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/eureka_server/.env
+      - /home/ubuntu/quickhammer_configs/eureka_server/.env
     ports:
       - "8761:8761"
     networks:
@@ -143,9 +143,8 @@ services:
   auth-service:
     image: thetharz/quickhammer-auth-service:latest
     container_name: auth-service
-    hostname: auth-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/auth_service/.env
+      - /home/ubuntu/quickhammer_configs/auth_service/.env
     ports:
       - "8080:8080"
     depends_on:
@@ -160,9 +159,8 @@ services:
   bid-service:
     image: thetharz/quickhammer-bid-service:latest
     container_name: bid-service
-    hostname: bid-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/bid_service/.env
+      - /home/ubuntu/quickhammer_configs/bid_service/.env
     ports:
       - "8081:8081"
     depends_on:
@@ -176,9 +174,8 @@ services:
   job-service:
     image: thetharz/quickhammer-job-service:latest
     container_name: job-service
-    hostname: job-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/job_service/.env
+      - /home/ubuntu/quickhammer_configs/job_service/.env
     ports:
       - "8082:8082"
     depends_on:
@@ -192,9 +189,8 @@ services:
   notification-service:
     image: thetharz/quickhammer-notification-service:latest
     container_name: notification-service
-    hostname: notification-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/notification_service/.env
+      - /home/ubuntu/quickhammer_configs/notification_service/.env
     ports:
       - "8083:8083"
     depends_on:
@@ -208,9 +204,8 @@ services:
   payment-service:
     image: thetharz/quickhammer-payment-service:latest
     container_name: payment-service
-    hostname: payment-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/payment_service/.env
+      - /home/ubuntu/quickhammer_configs/payment_service/.env
     ports:
       - "8084:8084"
     depends_on:
@@ -223,9 +218,8 @@ services:
   user-service:
     image: thetharz/quickhammer-user-service:latest
     container_name: user-service
-    hostname: user-service
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/user_service/.env
+      - /home/ubuntu/quickhammer_configs/user_service/.env
     ports:
       - "8085:8085"
     depends_on:
@@ -240,9 +234,8 @@ services:
   api-gateway:
     image: thetharz/quickhammer-api-gateway:latest
     container_name: api-gateway
-    hostname: api-gateway
     env_file:
-      - /home/tharindu/projects/quickhammer-configs/api_gateway/.env
+      - /home/ubuntu/quickhammer_configs/api_gateway/.env
     ports:
       - "5000:5000"
     depends_on:
@@ -266,9 +259,9 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - "9091:9090"
+      - "9090:9090"
     volumes:
-      - /home/tharindu/projects/quickhammer-configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/ubuntu/quickhammer_configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
