@@ -4,6 +4,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,10 @@ public class JwtAuthFilter implements GatewayFilter,Ordered{
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     ServerHttpRequest request = exchange.getRequest();
+
+    if(exchange.getRequest().getMethod() == HttpMethod.OPTIONS){
+        return chain.filter(exchange);
+    }
 
     if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
             return onError(exchange, "Missing Authorization header", HttpStatus.UNAUTHORIZED);

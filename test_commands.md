@@ -8,3 +8,10 @@ curl -X POST http://localhost:5000/api/v1/auth/register \
     "lastName": "User",
     "phoneNumber": "1234567890"
 }'
+
+curl -X POST http://localhost:5000/api/v1/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+"email": "test5@example.com",
+"password": "Test@1234"
+}'
