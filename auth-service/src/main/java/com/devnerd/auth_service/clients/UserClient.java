@@ -1,6 +1,8 @@
 package com.devnerd.auth_service.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,6 +15,6 @@ public interface UserClient {
   @PostMapping("/api/v1/user/create-user")
   UserReponseDTO registerUser(@RequestBody RegisterUserRequestDTO request);
 
-  @PostMapping("/api/v1/user/get-user-details")
-  UserDetailsResponseDTO getUser(@RequestBody Long userId);
+  @GetMapping("/api/v1/user/{userId}")
+  UserDetailsResponseDTO getUser(@PathVariable Long userId);
 }

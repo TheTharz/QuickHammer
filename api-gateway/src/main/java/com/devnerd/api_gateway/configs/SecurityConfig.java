@@ -10,33 +10,22 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+        @SuppressWarnings("removal")
         @Bean
         public SecurityWebFilterChain security(ServerHttpSecurity http) {
 
                 return http
                                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                                .httpBasic().disable()
+                                .formLogin().disable()
                                 .authorizeExchange(ex -> ex
                                                 .pathMatchers(
                                                                 "/swagger-ui.html",
                                                                 "/swagger-ui/**",
                                                                 "/v3/api-docs/**",
                                                                 "/webjars/**",
-
-                                                                "/job-service/api-docs/**",
-                                                                "/job-service/swagger-ui.html",
-                                                                "/job-service/swagger-ui/**",
-
-                                                                "/user-service/**",
-                                                                "/auth-service/**",
-                                                                "/api/v1/auth/**",
-                                                                "/bid-service/**",
-                                                                "/job-service/**",
-                                                                "/notification-service/**",
-                                                                "/payment-service/**")
-                                                .permitAll() // here all the routes have been opened later remove routes
-                                                             // that need the authentication
-
-                                                .anyExchange().authenticated())
+                                                                "/api/v1/auth/**").permitAll()
+                                                .anyExchange().permitAll())
                                 .build();
         }
 }

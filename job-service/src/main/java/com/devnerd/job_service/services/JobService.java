@@ -2,6 +2,7 @@ package com.devnerd.job_service.services;
 
 import java.time.LocalDateTime;
 
+import com.devnerd.job_service.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -9,11 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.devnerd.events.models.BidAcceptedEvent;
 import com.devnerd.events.models.JobAssignedEvent;
-import com.devnerd.job_service.dto.GetJobDetailsDTO;
-import com.devnerd.job_service.dto.GetJobsResponseDTO;
-import com.devnerd.job_service.dto.JobCreateRequestDTO;
-import com.devnerd.job_service.dto.JobCreatedResponseDTO;
-import com.devnerd.job_service.dto.JobSummaryDTO;
 import com.devnerd.job_service.events.producers.EventProducer;
 import com.devnerd.job_service.models.JobModel;
 import com.devnerd.job_service.repository.JobRepository;
@@ -106,4 +102,21 @@ public class JobService {
             .build());
   }
 }
+
+    public GetMyJobsDTO getMyJobs(Long userId,Integer page, Integer size) {
+        Page<JobModel> jobPage = jobRepository.findByClientId(
+                userId,
+                PageRequest.of(page, size, Sort.by("createdAt").descending())
+        );
+
+        GetMyJobsDTO response = GetMyJobsDTO.builder()
+                .jobs(jobPage.getContent())
+                .page(jobPage.getNumber())
+                .size(jobPage.getSize())
+                .totalElements(jobPage.getTotalElements())
+                .totalPages(jobPage.getTotalPages())
+                .build();
+
+        return response;
+    }
 }

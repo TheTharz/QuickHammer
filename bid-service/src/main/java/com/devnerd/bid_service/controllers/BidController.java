@@ -17,7 +17,7 @@ import com.devnerd.bid_service.dto.UpdateBidResponseDTO;
 import com.devnerd.bid_service.services.BidService;
 
 @RestController
-@RequestMapping("/api/v1/bid")
+@RequestMapping("/api/v1/bids")
 public class BidController {
 
   private final BidService bidService;

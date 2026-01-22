@@ -108,4 +108,19 @@ public class AuthService {
 
     return response;
   }
+
+  public UserDetailsResponseDTO getCurrentUser(String sessionId, Long userId) {
+    // First, try to get user details from session cache (Redis)
+    return sessionStorageService.getSession(sessionId)
+        .map(session -> new UserDetailsResponseDTO(
+            session.getUserId(),
+            session.getPhoneNumber(),
+            session.getFirstName(),
+            session.getLastName(),
+            session.getEmail(),
+            session.getUserName()
+        ))
+        // Fallback to user service if session not found or expired
+        .orElseGet(() -> userClient.getUser(userId));
+  }
 }

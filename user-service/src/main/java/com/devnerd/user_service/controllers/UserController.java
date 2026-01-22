@@ -1,5 +1,7 @@
 package com.devnerd.user_service.controllers;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +27,8 @@ public class UserController {
     return response;
   }
 
-  @PostMapping("/get-user-details")
-  public UserDetailsResponseDTO getUser(@RequestBody Long userId) {
+  @GetMapping("/{userId}")
+  public UserDetailsResponseDTO getUser(@PathVariable Long userId) {
     UserDetailsResponseDTO response = userService.getUserDetails(userId);
     return response;
   }
