@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug API Gateway",
+            "request": "launch",
+            "mainClass": "com.devnerd.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "cwd": "${workspaceFolder}/api-gateway"
+        },
+        {
+            "type": "java",
+            "name": "Debug API Gateway (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5000,
+            "projectName": "api-gateway"
+        }
+    ]
+}

@@ -48,7 +48,7 @@ public class JobService {
   }
 
   public GetJobsResponseDTO getAllJobSummaries(Integer page, Integer size) {
-    Page<JobSummaryDTO> jobPage = jobRepository.findAllBy(
+    Page<JobSummaryDTO> jobPage = jobRepository.findByStatus(JobModel.JobStatus.OPEN,
                 PageRequest.of(page, size, Sort.by("createdAt").descending())
         );
     GetJobsResponseDTO response = GetJobsResponseDTO.builder()
@@ -117,6 +117,20 @@ public class JobService {
                 .totalPages(jobPage.getTotalPages())
                 .build();
 
+        return response;
+    }
+
+    public GetMyJobsDTO getJobsAssignedToMe(Long userId, int page, int size) {
+      Page<JobModel> jobPage = jobRepository.findByAssignedToId(
+              userId,
+              PageRequest.of(page, size, Sort.by("createdAt").descending()));
+        GetMyJobsDTO response = GetMyJobsDTO.builder()
+                .jobs(jobPage.getContent())
+                .page(jobPage.getNumber())
+                .size(jobPage.getSize())
+                .totalElements(jobPage.getTotalElements())
+                .totalPages(jobPage.getTotalPages())
+                .build();
         return response;
     }
 }

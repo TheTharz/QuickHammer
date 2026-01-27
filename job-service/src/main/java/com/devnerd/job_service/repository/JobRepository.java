@@ -12,4 +12,8 @@ public interface JobRepository extends JpaRepository<JobModel, Long> {
   Page<JobSummaryDTO> findAllBy(Pageable pageable);
 
     Page<JobModel> findByClientId(Long clientId, PageRequest createdAt);
+
+    Page<JobSummaryDTO> findByStatus(JobModel.JobStatus status,PageRequest createdAt);
+
+    Page<JobModel> findByAssignedToId(Long userId, PageRequest createdAt);
 }

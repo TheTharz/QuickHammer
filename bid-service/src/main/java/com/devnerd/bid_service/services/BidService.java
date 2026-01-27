@@ -96,5 +96,20 @@ public class BidService {
     UpdateBidResponseDTO response = UpdateBidResponseDTO.builder().bidId(bid.getBidId()).build();
     return response;
   }
-  
+
+    public GetBidsByJobResponseDTO getBidsPlacedByMe(Long userId, int page, int size) {
+        Page<BidSummaryDTO> bids = bidRepository.findByBidderId(
+                userId,
+                PageRequest.of(page, size, Sort.by("updatedAt").descending())
+        );
+        GetBidsByJobResponseDTO response = GetBidsByJobResponseDTO.builder().bids(
+                        bids.getContent())
+                .page(bids.getNumber())
+                .size(bids.getSize())
+                .totalElements(bids.getTotalElements())
+                .totalPages(bids.getTotalPages())
+                .build();
+
+        return response;
+    }
 }

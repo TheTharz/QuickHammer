@@ -40,4 +40,10 @@ public class JobController {
       GetMyJobsDTO response = jobService.getMyJobs(userId, page, size);
       return ResponseEntity.ok(response);
   }
+
+  @GetMapping("/jobs-assigned-to-me")
+  public ResponseEntity<GetMyJobsDTO> getJobsAssignedToMe(@RequestHeader("X-User-Id") Long userId,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+      GetMyJobsDTO response = jobService.getJobsAssignedToMe(userId, page, size);
+      return ResponseEntity.ok(response);
+  }
 }
