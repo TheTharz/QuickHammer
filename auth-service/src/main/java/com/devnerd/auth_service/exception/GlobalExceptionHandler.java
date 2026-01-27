@@ -47,4 +47,13 @@ public class GlobalExceptionHandler {
     ErrorResponse error = new ErrorResponse(ex.getMessage(), 401, System.currentTimeMillis());
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
   }
+
+  /**
+   * Handle circuit breaker exceptions
+   */
+  @ExceptionHandler(ServiceUnavailableException.class)
+  public ResponseEntity<ErrorResponse> handleServiceUnavailable(ServiceUnavailableException ex) {
+    ErrorResponse error = new ErrorResponse(ex.getMessage(), 503, System.currentTimeMillis());
+    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+  }
 }

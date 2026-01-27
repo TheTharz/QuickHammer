@@ -20,13 +20,13 @@ mvn_docker() {
         maven:3.9.6-eclipse-temurin-21 \
         mvn "$@"
 }
-#
-## 1. Build common-events
-#echo "Building common-events..."
-#cd common-events
-#mvn_docker clean install -DskipTests
-#cd ..
-#echo "common-events built successfully."
+
+# 1. Build common-events
+echo "Building common-events..."
+cd common-events
+mvn_docker clean install -DskipTests
+cd ..
+echo "common-events built successfully."
 
 # Function to build service
 build_service() {
@@ -55,10 +55,10 @@ build_service() {
 # build_service "api-gateway"
 # build_service "auth-service"
 # build_service "user-service"
-#build_service "job-service"
+build_service "job-service"
 # build_service "bid-service"
-#build_service "notification-service"
-build_service "payment-service"
+build_service "notification-service"
+# build_service "payment-service"
 
 echo "========================================="
 echo "  All services built successfully!"

@@ -10,11 +10,53 @@ import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserDetailsResponseDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 
+import com.devnerd.auth_service.exception.ServiceUnavailableException;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+/**
+ * Feign client for User Service with Circuit Breaker protection
+ */
 @FeignClient(name = "USER-SERVICE")
 public interface UserClient {
+  
+  /**
+   * Register a new user in User Service
+   * 
+   * Circuit Breaker Configuration:
+   * - name: "userService" - identifies this circuit breaker instance
+   * - fallbackMethod: called when circuit is open or service fails
+   * 
+   * Interview Point: "For critical write operations, circuit breaker helps us
+   * fail fast instead of letting threads wait for timeouts, preventing thread
+   * pool exhaustion"
+   */
+  @CircuitBreaker(name = "userService", fallbackMethod = "registerUserFallback")
   @PostMapping("/api/v1/user/create-user")
   UserReponseDTO registerUser(@RequestBody RegisterUserRequestDTO request);
 
+  /**
+   * Fetch user details by ID
+   */
+  @CircuitBreaker(name = "userService", fallbackMethod = "getUserFallback")
   @GetMapping("/api/v1/user/{userId}")
   UserDetailsResponseDTO getUser(@PathVariable Long userId);
+  
+  /**
+   * Fallback method signatures must match the original method
+   * with an additional Throwable parameter
+   */
+  default UserReponseDTO registerUserFallback(RegisterUserRequestDTO request, Throwable throwable) {
+    throw new ServiceUnavailableException(
+      "User registration service is temporarily unavailable. Please try again later.",
+      throwable
+    );
+  }
+  
+  default UserDetailsResponseDTO getUserFallback(Long userId, Throwable throwable) {
+    throw new ServiceUnavailableException(
+      "Unable to fetch user details. User service is temporarily unavailable.",
+      throwable
+    );
+  }
 }

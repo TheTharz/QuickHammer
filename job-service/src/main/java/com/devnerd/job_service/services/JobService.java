@@ -10,16 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.devnerd.events.models.BidAcceptedEvent;
 import com.devnerd.events.models.JobAssignedEvent;
+import com.devnerd.events.models.JobCompletedEvent;
 import com.devnerd.job_service.events.producers.EventProducer;
 import com.devnerd.job_service.models.JobModel;
 import com.devnerd.job_service.repository.JobRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Data
 @AllArgsConstructor
+@Slf4j
 public class JobService {
   private final JobRepository jobRepository;
   private final EventProducer eventProducer;
@@ -132,5 +135,56 @@ public class JobService {
                 .totalPages(jobPage.getTotalPages())
                 .build();
         return response;
+    }
+
+    public CompleteJobResponseDTO completeJob(Long jobId, Long userId, CompleteJobRequestDTO request) {
+        log.info("Attempting to complete job. JobId: {}, UserId: {}", jobId, userId);
+        
+        JobModel job = jobRepository.findById(jobId)
+                .orElseThrow(() -> {
+                    log.error("Job not found. JobId: {}", jobId);
+                    return new RuntimeException("Job not found");
+                });
+
+        // Validate that the user is assigned to this job
+        if (job.getAssignedToId() == null || !job.getAssignedToId().equals(userId)) {
+            log.error("Unauthorized: User {} is not assigned to job {}", userId, jobId);
+            throw new RuntimeException("You are not assigned to this job");
+        }
+
+        // Validate job status
+        if (job.getStatus() != JobModel.JobStatus.IN_PROGRESS) {
+            log.error("Invalid job status for completion. JobId: {}, Status: {}", jobId, job.getStatus());
+            throw new RuntimeException("Only jobs in IN_PROGRESS status can be completed. Current status: " + job.getStatus());
+        }
+
+        // Update job status to COMPLETED
+        job.setStatus(JobModel.JobStatus.COMPLETED);
+        job.setUpdatedAt(LocalDateTime.now());
+        JobModel completedJob = jobRepository.save(job);
+        
+        log.info("Job completed successfully. JobId: {}, AssignedTo: {}, CompletedAt: {}", 
+                 jobId, userId, completedJob.getUpdatedAt());
+
+        // Publish job completed event
+        JobCompletedEvent event = JobCompletedEvent.builder()
+                .jobId(completedJob.getJobId())
+                .jobTitle(completedJob.getTitle())
+                .jobDescription(completedJob.getDescription())
+                .clientId(completedJob.getClientId())
+                .completedById(userId)
+                .agreedBudget(completedJob.getAgreedBidBudget())
+                .completedAt(completedJob.getUpdatedAt())
+                .completionNotes(request.getCompletionNotes())
+                .build();
+        eventProducer.publishJobCompletedEvent(event);
+
+        return CompleteJobResponseDTO.builder()
+                .jobId(completedJob.getJobId())
+                .title(completedJob.getTitle())
+                .status(completedJob.getStatus())
+                .completedAt(completedJob.getUpdatedAt())
+                .message("Job completed successfully")
+                .build();
     }
 }

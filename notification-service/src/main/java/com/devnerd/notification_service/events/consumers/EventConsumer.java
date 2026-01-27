@@ -4,6 +4,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.devnerd.events.models.JobAssignedEvent;
+import com.devnerd.events.models.JobCompletedEvent;
 import com.devnerd.notification_service.services.NotificationService;
 
 import lombok.Data;
@@ -21,6 +22,16 @@ public class EventConsumer {
       emailService.sendJobAssignedEmail(event);
     } catch (Exception e) {
       log.error("Failed to handle JobAssignedEvent for job: {}",event.getJobId(),e);
+    }
+  }
+
+  @KafkaListener(topics = "job.completed", groupId = "notification-service-group")
+  public void handleJobCompletedEvent(JobCompletedEvent event){
+    try {
+      log.info("Received JobCompletedEvent for job: {}, client: {}",event.getJobId(), event.getClientId());
+      emailService.sendJobCompletedEmail(event);
+    } catch (Exception e) {
+      log.error("Failed to handle JobCompletedEvent for job: {}",event.getJobId(),e);
     }
   }
 }

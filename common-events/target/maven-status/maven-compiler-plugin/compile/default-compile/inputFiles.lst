@@ -1,3 +1,4 @@
 /app/src/main/java/com/devnerd/events/models/JobAssignedEvent.java
 /app/src/main/java/com/devnerd/events/models/UserLoginEvent.java
 /app/src/main/java/com/devnerd/events/models/BidAcceptedEvent.java
+/app/src/main/java/com/devnerd/events/models/JobCompletedEvent.java

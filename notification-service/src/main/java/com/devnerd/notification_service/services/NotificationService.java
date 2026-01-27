@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.devnerd.events.models.JobAssignedEvent;
+import com.devnerd.events.models.JobCompletedEvent;
 import com.devnerd.notification_service.clients.UserClient;
 import com.devnerd.notification_service.dto.UserDetailsReponseDTO;
 import com.devnerd.notification_service.model.NotificationModel;
@@ -15,10 +16,12 @@ import com.devnerd.notification_service.repository.NotificationRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @AllArgsConstructor
 @Service
+@Slf4j
 public class NotificationService{
   private final UserClient userClient;
   private final JavaMailSender javaMailSender;
@@ -57,5 +60,48 @@ public class NotificationService{
            "Agreed Budget: $" + event.getAgreedBidBudget() + "\n\n" +
            "Please check your dashboard for more details.\n\n" +
            "Regards,\nTeam DevNerd";
+  }
+
+  public void sendJobCompletedEmail(JobCompletedEvent event){
+    log.info("Sending job completion notification to client: {}", event.getClientId());
+    
+    //get client email
+    UserDetailsReponseDTO client = userClient.getUser(event.getClientId());
+    
+    //get freelancer details
+    UserDetailsReponseDTO freelancer = userClient.getUser(event.getCompletedById());
+
+    //send email to client
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo(client.getEmail());
+    message.setSubject("Job Completed: " + event.getJobTitle());
+    message.setText(buildJobCompletedEmailBody(event, client, freelancer));
+
+    javaMailSender.send(message);
+    log.info("Job completion email sent to: {}", client.getEmail());
+
+    //save notification to db
+    NotificationModel notification = NotificationModel.builder()
+      .recipientId(client.getUserId())
+      .message(buildJobCompletedEmailBody(event, client, freelancer))
+      .createdAt(LocalDateTime.now())
+      .medium(NotificationMedium.EMAIL)
+      .build();
+      
+    notificationRepository.save(notification);
+    log.info("Job completion notification saved for client: {}", event.getClientId());
+  }
+
+  private String buildJobCompletedEmailBody(JobCompletedEvent event, UserDetailsReponseDTO client, UserDetailsReponseDTO freelancer) {
+    return "Hi " + client.getFirstName() + " " + client.getLastName() + ",\n\n" +
+           "Great news! Your job has been completed.\n\n" +
+           "Job Title: " + event.getJobTitle() + "\n" +
+           "Description: " + event.getJobDescription() + "\n" +
+           "Agreed Budget: $" + event.getAgreedBudget() + "\n" +
+           "Completed By: " + freelancer.getFirstName() + " " + freelancer.getLastName() + "\n" +
+           "Completed At: " + event.getCompletedAt() + "\n\n" +
+           (event.getCompletionNotes() != null ? "Completion Notes: " + event.getCompletionNotes() + "\n\n" : "") +
+           "Please review the work and proceed with payment if satisfied.\n\n" +
+           "Regards,\nTeam QuickHammer";
   }
 }

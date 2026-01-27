@@ -1,5 +1,7 @@
 com/devnerd/events/models/JobAssignedEvent.class
 com/devnerd/events/models/UserLoginEvent.class
 com/devnerd/events/models/BidAcceptedEvent.class
-com/devnerd/events/models/JobAssignedEvent$JobAssignedEventBuilder.class
+com/devnerd/events/models/JobCompletedEvent$JobCompletedEventBuilder.class
 com/devnerd/events/models/BidAcceptedEvent$BidAcceptedEventBuilder.class
+com/devnerd/events/models/JobAssignedEvent$JobAssignedEventBuilder.class
+com/devnerd/events/models/JobCompletedEvent.class
