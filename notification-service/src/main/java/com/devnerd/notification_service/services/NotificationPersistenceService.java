@@ -41,7 +41,7 @@ public class NotificationPersistenceService {
         NotificationModel saved = notificationRepository.save(notification);
         
         log.info("Notification saved with id: {} for recipientId: {}", 
-                 saved.getId(), recipientId);
+                 saved.getNotificationId(), recipientId);
         
         return saved;
     }

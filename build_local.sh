@@ -53,8 +53,8 @@ build_service() {
 # 2. Build all services
 #build_service "eureka-server"
 # build_service "api-gateway"
-# build_service "auth-service"
-# build_service "user-service"
+build_service "auth-service"
+build_service "user-service"
 build_service "job-service"
 # build_service "bid-service"
 build_service "notification-service"
