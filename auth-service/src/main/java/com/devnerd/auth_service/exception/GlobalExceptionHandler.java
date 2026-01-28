@@ -48,6 +48,12 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
   }
 
+  @ExceptionHandler(DuplicateResourceException.class)
+  public ResponseEntity<ErrorResponse> handleDuplicateResource(DuplicateResourceException ex) {
+    ErrorResponse error = new ErrorResponse(ex.getMessage(), 409, System.currentTimeMillis());
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+  }
+
   /**
    * Handle circuit breaker exceptions
    */

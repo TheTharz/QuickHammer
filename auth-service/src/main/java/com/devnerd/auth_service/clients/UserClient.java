@@ -10,6 +10,7 @@ import com.devnerd.auth_service.dto.RegisterUserRequestDTO;
 import com.devnerd.auth_service.dto.UserDetailsResponseDTO;
 import com.devnerd.auth_service.dto.UserReponseDTO;
 
+import com.devnerd.auth_service.exception.DuplicateResourceException;
 import com.devnerd.auth_service.exception.ServiceUnavailableException;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -47,6 +48,22 @@ public interface UserClient {
    * with an additional Throwable parameter
    */
   default UserReponseDTO registerUserFallback(RegisterUserRequestDTO request, Throwable throwable) {
+    // Check if this is a FeignException with a 409 status (Duplicate Resource)
+    if (throwable instanceof feign.FeignException) {
+      feign.FeignException feignException = (feign.FeignException) throwable;
+      if (feignException.status() == 409) {
+        // Extract and re-throw as DuplicateResourceException with the original message
+        String message = feignException.contentUTF8();
+        if (message != null && message.contains("Email already exists")) {
+          throw new DuplicateResourceException("Email already exists");
+        } else if (message != null && message.contains("Username already exists")) {
+          throw new DuplicateResourceException("Username already exists");
+        }
+        throw new DuplicateResourceException("Duplicate resource");
+      }
+    }
+    
+    // For actual service unavailability (timeouts, connection errors, circuit open)
     throw new ServiceUnavailableException(
       "User registration service is temporarily unavailable. Please try again later.",
       throwable
