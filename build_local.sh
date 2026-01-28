@@ -56,7 +56,7 @@ build_service() {
 build_service "auth-service"
 build_service "user-service"
 build_service "job-service"
-# build_service "bid-service"
+build_service "bid-service"
 build_service "notification-service"
 # build_service "payment-service"
 

@@ -2,6 +2,7 @@ package com.devnerd.notification_service.services;
 
 import org.springframework.stereotype.Service;
 
+import com.devnerd.events.models.BidRejectedEvent;
 import com.devnerd.events.models.JobAssignedEvent;
 import com.devnerd.events.models.JobCompletedEvent;
 import com.devnerd.notification_service.dto.UserDetailsReponseDTO;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Orchestrator service for notification processing
+ * Choreography Saga Participant
  */
 @Service
 @RequiredArgsConstructor
@@ -103,5 +105,49 @@ public class NotificationService {
     notificationPersistenceService.saveNotification(client.getUserId(), notificationMessage);
     
     log.info("Job completion notification processed for client: {}", client.getUserId());
+  }
+  
+  /**
+   * Process bid rejection notification
+   * Part of Choreography Saga: Bid Acceptance Flow
+   */
+  public void sendBidRejectedEmail(BidRejectedEvent event) {
+    log.info("[SAGA:{}] Processing bid rejection notification for userId: {}, bidId: {}", 
+             event.getSagaId(), event.getBidderId(), event.getBidId());
+    
+    // Step 1: Fetch user details
+    UserDetailsReponseDTO user = userDetailsService.getUserDetails(event.getBidderId());
+
+    // Step 2: Handle circuit breaker fallback
+    if (user == null) {
+      log.warn("[SAGA:{}] User service unavailable. Saving pending notification for userId: {}", 
+               event.getSagaId(), event.getBidderId());
+      
+      String pendingMessage = emailTemplateService.buildPendingNotificationMessage(
+        "Bid #" + event.getBidId(), 
+        "user service unavailable"
+      );
+      
+      notificationPersistenceService.saveNotification(
+        event.getBidderId(), 
+        pendingMessage
+      );
+      
+      return; // Exit gracefully
+    }
+
+    // Step 3: Compose email
+    String subject = emailTemplateService.buildBidRejectedSubject(event);
+    String body = emailTemplateService.buildBidRejectedBody(event, user);
+
+    // Step 4: Send email
+    boolean emailSent = emailService.sendEmail(user.getEmail(), subject, body);
+
+    // Step 5: Persist notification
+    String notificationMessage = emailSent ? body : body + " (Email failed)";
+    notificationPersistenceService.saveNotification(user.getUserId(), notificationMessage);
+    
+    log.info("[SAGA:{}] Bid rejection notification processed for userId: {}", 
+             event.getSagaId(), user.getUserId());
   }
 }

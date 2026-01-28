@@ -2,12 +2,14 @@ package com.devnerd.notification_service.services;
 
 import org.springframework.stereotype.Service;
 
+import com.devnerd.events.models.BidRejectedEvent;
 import com.devnerd.events.models.JobAssignedEvent;
 import com.devnerd.events.models.JobCompletedEvent;
 import com.devnerd.notification_service.dto.UserDetailsReponseDTO;
 
 /**
  * Service responsible for composing email templates
+ * Supports Choreography Saga patterns
  */
 @Service
 public class EmailTemplateService {
@@ -63,5 +65,32 @@ public class EmailTemplateService {
      */
     public String buildPendingNotificationMessage(String jobTitle, String reason) {
         return "Job: " + jobTitle + " (Email pending - " + reason + ")";
+    }
+    
+    /**
+     * Build subject for bid rejection email
+     * Part of Choreography Saga: Bid Acceptance Flow
+     */
+    public String buildBidRejectedSubject(BidRejectedEvent event) {
+        return "Your bid was not selected - Job #" + event.getJobId();
+    }
+    
+    /**
+     * Build body for bid rejection email
+     * Part of Choreography Saga: Bid Acceptance Flow
+     */
+    public String buildBidRejectedBody(BidRejectedEvent event, UserDetailsReponseDTO user) {
+        return "Hi " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
+               "Thank you for submitting your bid on QuickHammer.\n\n" +
+               "Unfortunately, your bid was not selected for Job #" + event.getJobId() + ".\n\n" +
+               "Your Bid Amount: $" + event.getBidAmount() + "\n" +
+               "Reason: " + event.getRejectionReason() + "\n\n" +
+               "Don't be discouraged! There are many other opportunities available.\n" +
+               "Keep browsing jobs and submitting competitive bids.\n\n" +
+               "Tips to improve your chances:\n" +
+               "- Provide detailed proposals\n" +
+               "- Build your reputation with completed jobs\n" +
+               "- Respond quickly to job postings\n\n" +
+               "Regards,\nTeam QuickHammer";
     }
 }

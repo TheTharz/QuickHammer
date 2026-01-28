@@ -1,4 +1,8 @@
 /app/src/main/java/com/devnerd/events/models/JobAssignedEvent.java
 /app/src/main/java/com/devnerd/events/models/UserLoginEvent.java
 /app/src/main/java/com/devnerd/events/models/BidAcceptedEvent.java
+/app/src/main/java/com/devnerd/events/models/BidAcceptanceRollbackEvent.java
 /app/src/main/java/com/devnerd/events/models/JobCompletedEvent.java
+/app/src/main/java/com/devnerd/events/models/JobAssignmentFailedEvent.java
+/app/src/main/java/com/devnerd/events/models/BidRejectedEvent.java
+/app/src/main/java/com/devnerd/events/models/UserBidStatisticsEvent.java

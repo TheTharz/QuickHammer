@@ -83,28 +83,66 @@ public class JobService {
     return response;
   }
 
-  public void updateJobOnBidAccept(BidAcceptedEvent event){ {
-    JobModel job = jobRepository.findById(event.getJobId())
-            .orElseThrow(() -> new RuntimeException("Job not found"));
-    job.setStatus(JobModel.JobStatus.IN_PROGRESS);
-    job.setAssignedToId(event.getAssignedToId());
-    job.setAgreedBidBudget(event.getBidBudget());
-    jobRepository.save(job);
+  /**
+   * Choreography Saga Participant - Handle Bid Accepted Event
+   * Step 2 of Bid Acceptance Saga
+   * 
+   * If successful: Updates job status and publishes JobAssignedEvent
+   * If fails: Publishes BidAcceptanceRollbackEvent to trigger compensation
+   */
+  public void updateJobOnBidAccept(BidAcceptedEvent event) {
+    String sagaId = "BID_ACCEPT_" + event.getBidId(); // Generate saga ID based on bid
+    
+    try {
+      log.info("[SAGA:{}] Processing BidAcceptedEvent for job: {}, bidId: {}", 
+               sagaId, event.getJobId(), event.getBidId());
+      
+      JobModel job = jobRepository.findById(event.getJobId())
+              .orElseThrow(() -> new RuntimeException("Job not found"));
+      
+      // Validate job state
+      if (job.getStatus() != JobModel.JobStatus.OPEN) {
+        throw new RuntimeException("Job is not in OPEN status. Current status: " + job.getStatus());
+      }
+      
+      // Update job status to IN_PROGRESS
+      job.setStatus(JobModel.JobStatus.IN_PROGRESS);
+      job.setAssignedToId(event.getAssignedToId());
+      job.setAgreedBidBudget(event.getBidBudget());
+      jobRepository.save(job);
+      
+      log.info("[SAGA:{}] Job {} assigned to freelancer {}", 
+               sagaId, event.getJobId(), event.getAssignedToId());
 
-    //publish the event of assigned job
-    eventProducer.publishJobAssignedEvent(JobAssignedEvent.builder()
-            .jobId(event.getJobId())
-            .assignedToId(event.getAssignedToId())
-            .bidId(event.getBidId())
-            .clientId(job.getClientId())
-            .jobTitle(job.getTitle())
-            .jobDescription(job.getDescription())
-            .jobBudget(job.getBudget())
-            .agreedBidBudget(event.getBidBudget())
-            .jobCategory(job.getCategory())
-            .build());
+      // Publish JobAssignedEvent - continues the saga
+      eventProducer.publishJobAssignedEvent(JobAssignedEvent.builder()
+              .jobId(event.getJobId())
+              .assignedToId(event.getAssignedToId())
+              .bidId(event.getBidId())
+              .clientId(job.getClientId())
+              .jobTitle(job.getTitle())
+              .jobDescription(job.getDescription())
+              .jobBudget(job.getBudget())
+              .agreedBidBudget(event.getBidBudget())
+              .jobCategory(job.getCategory())
+              .build());
+      
+      log.info("[SAGA:{}] Published JobAssignedEvent successfully", sagaId);
+      
+    } catch (Exception e) {
+      log.error("[SAGA:{}] Failed to update job on bid accept. Triggering compensation. Error: {}", 
+                sagaId, e.getMessage(), e);
+      
+      // Trigger compensation - rollback bid acceptance
+      eventProducer.publishBidAcceptanceRollbackEvent(
+          event.getBidId(), 
+          event.getJobId(), 
+          event.getAssignedToId(), 
+          sagaId, 
+          "Job assignment failed: " + e.getMessage()
+      );
+    }
   }
-}
 
     public GetMyJobsDTO getMyJobs(Long userId,Integer page, Integer size) {
         Page<JobModel> jobPage = jobRepository.findByClientId(
